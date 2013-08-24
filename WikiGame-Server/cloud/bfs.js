@@ -48,6 +48,7 @@ function isMarked(node){
 }
 
 function setLength(node,length){
+	node.length = length;
 	nodesLenght[config.getIdFn(node)] = length;
 }
 
