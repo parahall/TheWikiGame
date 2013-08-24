@@ -1,7 +1,10 @@
 /*
 Representing BFS algortihm with slight changes. 
 Should recieve proper configuration that contain
-source = 
+source = source node
+getAdjFn = function that return all neighboor nodes
+processNodeFn = function that stores nodes that satsfy our search criteria
+getIdFn = returning id of node.
 */
 var config = {};
 module.exports = function(source, getAdjFn, processNodeFn, getIdFn){
@@ -11,6 +14,9 @@ module.exports = function(source, getAdjFn, processNodeFn, getIdFn){
 	config.getIdFn = getIdFn;
 }
 
+/*
+BFS algorithm
+*/
 module.exports.process = function(){
 	var isFinished = false;
 	var queue = [];
