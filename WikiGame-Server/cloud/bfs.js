@@ -1,44 +1,61 @@
+var config = {};
 module.exports = function(source, getAdjFn, processNodeFn, getIdFn){
-	this.source = source;
-	this.getAdjFn = getAdjFn;
-	this.processNodeFn = processNodeFn;
-	this.getIdFn = getIdFn;
+	config.source = source;
+	config.getAdjFn = getAdjFn;
+	config.processNodeFn = processNodeFn;
+	config.getIdFn = getIdFn;
 }
 
-exports.process = function(){
+module.exports.process = function(){
 	var isFinished = false;
 	var queue = [];
-	queue.push(source);
-	setLength(source,0);
-	while(queue.length !== 0 && !isFinished){
+	queue.push(config.source);
+	setLength(config.source,0);
+	while(queue.length > 0 && !isFinished){
 		var currentNode = queue.shift();
-		var adjNodes = this.getAdjFn(currentNode);
+		console.log('queue');
+		console.log(queue);
+		var adjNodes = config.getAdjFn(currentNode);
+		console.log('adjNodes');
+		console.log(adjNodes);
 		for (var i = 0; i < adjNodes.length; i++) {
-			if (!isMarked(getIdFn(node))) {
-				queue.push(adjNodes[i]);
-				mark(adjNodes[i]);
-				setLength(getLength(currentNode)+1);
+			var node = adjNodes[i];
+			if (!isMarked(node)) {
+				console.log('neighbor: ' + config.getIdFn(node));
+				queue.push(node);
+				mark(node);
+				setLength(node, getLength(currentNode)+1);
 			};
 		};
-		isFinished = this.processNodeFn(currentNode);
+		isFinished = config.processNodeFn(currentNode);
 	}
 }
 var markedObjects = [];
 var nodesLenght = {};
 function mark(node){
-	markedObjects.push(this.getIdFn(node));
+	markedObjects.push(config.getIdFn(node));
 }
 
 function isMarked(node){
-	return markedObjects.indexOf(this.getIdFn(node))>-1;
+	var isMarked = markedObjects.contains(config.getIdFn(node));
+	return isMarked;
 }
 
 function setLength(node,length){
 	node.length = length;
-	nodesLenght[this.getIdFn(node)] = length;
+	nodesLenght[config.getIdFn(node)] = length;
 }
 
 function getLength(node){
-	return nodesLenght[nodesLenght.indexOf(this.getIdFn(node))];
+	return nodesLenght[config.getIdFn(node)];
+}
+
+Array.prototype.contains = function(obj){
+	for (var i = 0; i < this.length; i++) {
+		if(this[i] === obj)
+			return true;
+	}
+
+	return false;
 }
 

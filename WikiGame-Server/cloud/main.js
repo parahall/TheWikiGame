@@ -15,3 +15,8 @@ Parse.Cloud.define("WikiTest", function(request, response) {
 	    console.error('Request failed with response code ' + httpResponse.status);
 	  });
 });
+
+Parse.Cloud.define("test_bfs", function(request, response) {
+	var bfsTest = require('cloud/Tests/bfs_test.js');
+	response.success(bfsTest.happyPath());
+});
