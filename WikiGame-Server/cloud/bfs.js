@@ -1,8 +1,8 @@
-module.exports = function(source, getAdjFn, processNodeFn, getId){
+module.exports = function(source, getAdjFn, processNodeFn, getIdFn){
 	this.source = source;
 	this.getAdjFn = getAdjFn;
 	this.processNodeFn = processNodeFn;
-	this.getId = getId;
+	this.getIdFn = getIdFn;
 }
 
 exports.process = function(){
@@ -14,7 +14,7 @@ exports.process = function(){
 		var currentNode = queue.shift();
 		var adjNodes = this.getAdjFn(currentNode);
 		for (var i = 0; i < adjNodes.length; i++) {
-			if (!isMarked(getId(node))) {
+			if (!isMarked(getIdFn(node))) {
 				queue.push(adjNodes[i]);
 				mark(adjNodes[i]);
 				setLength(getLength(currentNode)+1);
@@ -26,19 +26,19 @@ exports.process = function(){
 var markedObjects = [];
 var nodesLenght = {};
 function mark(node){
-	markedObjects.push(this.getId(node));
+	markedObjects.push(this.getIdFn(node));
 }
 
 function isMarked(node){
-	return markedObjects.indexOf(this.getId(node))>-1;
+	return markedObjects.indexOf(this.getIdFn(node))>-1;
 }
 
 function setLength(node,length){
 	node.length = length;
-	nodesLenght[this.getId(node)] = length;
+	nodesLenght[this.getIdFn(node)] = length;
 }
 
 function getLength(node){
-	return nodesLenght[nodesLenght.indexOf(this.getId(node))];
+	return nodesLenght[nodesLenght.indexOf(this.getIdFn(node))];
 }
 
