@@ -12,7 +12,7 @@ exports.process = function(){
 	setLength(source,0);
 	while(queue.length !== 0 & !isFinished){
 		var currentNode = queue.shift();
-		var adjNodes = getAdjFn(currentNode);
+		var adjNodes = this.getAdjFn(currentNode);
 		for (var i = 0; i < adjNodes.length; i++) {
 			if (!isMarked(getId(node))) {
 				queue.push(adjNodes[i]);
