@@ -1,0 +1,7 @@
+Random Article
+https://en.wikipedia.org/w/api.php?format=json&action=query&list=random
+Links of given Article(Fritz%20de%20Quervain)
+https://en.wikipedia.org/w/api.php?format=json&action=parse&page=Fritz%20de%20Quervain&prop=links
+
+Specific Article:
+http://en.wikipedia.org/w/api.php?format=json&action=query&titles=Neuchatel%20(canton)&prop=revisions&rvprop=content
