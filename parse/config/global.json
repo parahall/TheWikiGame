@@ -1,0 +1,11 @@
+{
+    "applications": {
+        "WikiGame-Server": {
+            "applicationId": "BqFZ7LF4ZhCyCQWLQqEIwbZlAg7HjTRWp3K2cV4D", 
+            "masterKey": "tezmHqR8cn5puyKvy0GdaYDL2yCwcmZ0O8JZcf64"
+        }, 
+        "_default": {
+            "link": "WikiGame-Server"
+        }
+    }
+}
