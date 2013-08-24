@@ -1,3 +1,8 @@
+/*
+Representing BFS algortihm with slight changes. 
+Should recieve proper configuration that contain
+source = 
+*/
 var config = {};
 module.exports = function(source, getAdjFn, processNodeFn, getIdFn){
 	config.source = source;
@@ -13,21 +18,16 @@ module.exports.process = function(){
 	setLength(config.source,0);
 	while(queue.length > 0 && !isFinished){
 		var currentNode = queue.shift();
-		console.log('queue');
-		console.log(queue);
 		var adjNodes = config.getAdjFn(currentNode);
-		console.log('adjNodes');
-		console.log(adjNodes);
 		for (var i = 0; i < adjNodes.length; i++) {
 			var node = adjNodes[i];
 			if (!isMarked(node)) {
-				console.log('neighbor: ' + config.getIdFn(node));
 				queue.push(node);
 				mark(node);
 				setLength(node, getLength(currentNode)+1);
 			};
 		};
-		isFinished = config.processNodeFn(currentNode);
+		isFinished = config.processNodeFn(currentNode,getLength(currentNode));
 	}
 }
 var markedObjects = [];
@@ -42,7 +42,6 @@ function isMarked(node){
 }
 
 function setLength(node,length){
-	node.length = length;
 	nodesLenght[config.getIdFn(node)] = length;
 }
 
