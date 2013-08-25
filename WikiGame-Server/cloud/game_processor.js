@@ -6,12 +6,15 @@ module.exports = function(){
 
 //Generate the new game
 module.exports.generateNewGame = function(){
+	//Don`t know why it wasn`t call with constructor so i put it here
+	wikiApi = require('cloud/wikipedia_api.js');
 	wikiApi.getRandomArticle(function(article) {
-		//need to take care of article
-		console.log(article);
-	},function(error){
-		console.log(error);
-	});
+	    console.log(httpResponse.text);
+	    response.success(httpResponse.text);
+	  },
+	   function(httpResponse) {
+	    console.error('Request failed with response code ' + httpResponse.status);
+	  });
 }
 
 
