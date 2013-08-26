@@ -8,7 +8,7 @@ module.exports = function(){
 module.exports.generateNewGame = function(){
 	//Don`t know why it wasn`t call with constructor so i put it here
 	wikiApi = require('cloud/wikipedia_api.js');
-	wikiApi.getRandomArticle(function(article) {
+	wikiApi.getRandomArticle(function(httpResponse) {
 	    console.log(httpResponse.text);
 	    response.success(httpResponse.text);
 	  },
@@ -41,3 +41,4 @@ function generateUniqRandom(){
 	};
 	return numbArr;
 }
+

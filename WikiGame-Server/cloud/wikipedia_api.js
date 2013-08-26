@@ -11,7 +11,7 @@ exports.getRandomArticle = function(success, error) {
 
 exports.getArticleLinks = function(success, error, pageId) {
   Parse.Cloud.httpRequest({
-	  url: 'http://en.wikipedia.org/w/api.php?action=parse&format=json&pageid='+pageId+'&prop=links',
+	  url: 'http://en.wikipedia.org/w/api.php?action=query&format=json&pageids='+pageId+'&generator=links&gpllimit=max',
 	  headers: {
 	    'Content-Type': 'application/json'
 	  },
