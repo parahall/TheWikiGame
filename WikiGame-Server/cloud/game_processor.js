@@ -1,19 +1,23 @@
-var wikiApi
+var wikiApi = {};
 //constructor
 module.exports = function(){
  	wikiApi = require('cloud/wikipedia_api.js');
 }
 
 //Generate the new game
-module.exports.generateNewGame = function(){
+module.exports.generateNewGame = function(success, error){
 	//Don`t know why it wasn`t call with constructor so i put it here
-	wikiApi = require('cloud/wikipedia_api.js');
+	// wikiApi = require('cloud/wikipedia_api.js');
 	wikiApi.getRandomArticle(function(httpResponse) {
-	    console.log(httpResponse.text);
-	    response.success(httpResponse.text);
+		if(success){
+			success(httpResponse.text);
+		}
+	    
 	  },
 	   function(httpResponse) {
-	    console.error('Request failed with response code ' + httpResponse.status);
+	    if(error){
+	    	error('Request failed with response code ' + httpResponse.status);
+	    }
 	  });
 }
 

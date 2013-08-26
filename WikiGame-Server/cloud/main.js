@@ -18,7 +18,10 @@ Parse.Cloud.define("WikiTest", function(request, response) {
 
 Parse.Cloud.define("generateNewGame",function(request,response) {
 	var game_processor = require('cloud/game_processor.js');
-	game_processor.generateNewGame();
+	game_processor();
+	game_processor.generateNewGame(function(article){
+		response.success(article);
+	});
 })
 
 Parse.Cloud.define("test_bfs", function(request, response) {
