@@ -14,3 +14,6 @@ Android id: 12610483
 Android title: Android (operating system)
 To get title based on id:
 http://en.wikipedia.org/w/api.php?action=parse&format=json&pageid=12610483&prop=links
+
+
+Need to filter: File talk, User Talk, Talk:

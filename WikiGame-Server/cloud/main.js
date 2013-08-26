@@ -28,3 +28,12 @@ Parse.Cloud.define("test_bfs", function(request, response) {
 	var bfsTest = require('cloud/Tests/bfs_test.js');
 	response.success(bfsTest.happyPath());
 });
+
+Array.prototype.contains = function(obj){
+	for (var i = 0; i < this.length; i++) {
+		if(this[i] === obj)
+			return true;
+	}
+
+	return false;
+}
