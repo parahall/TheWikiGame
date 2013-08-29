@@ -15,9 +15,12 @@ module.exports.generateNewGame = function(success, error){
 		};
 		var bfs = require('cloud/bfs.js');
 		bfs(source, getAdjFn, processNodeFn, getIdFn);
-		bfs.process();
-		console.log(nodes);
-	    success(source);
+		bfs.process(function(){
+			console.log(source);
+			console.log(nodes);
+	    	success(nodes);
+		});
+		
 	  },
 	   function(httpResponse) {
 	    if(error){
@@ -27,16 +30,33 @@ module.exports.generateNewGame = function(success, error){
 }
 
 
+<<<<<<< HEAD
 var getAdjFn = function(node){
 	console.log("insideAdjFUnc");
 	console.log(node);
 
+=======
+var getAdjFn = function(node, callback){
+>>>>>>> 6ec3df1dcdca76e2962c370a7c60604d9e99ab4d
 	wikiApi.getArticleLinks(function(httpResponse) {
-		for(link in httpResponse.data.query.pages){
-			console.log(link);
+		result = [];
+		if(httpResponse.data.query)
+		{
+			for(link in httpResponse.data.query.pages){
+				var page = httpResponse.data.query.pages[link];
+				if(page.ns == 0 && page.pageid){
+					result.push({id: page.pageid, title: page.title});
+				}
+			}	
 		}
+<<<<<<< HEAD
 		return [];
 	}, 	   
+=======
+		
+		callback(result);
+	},
+>>>>>>> 6ec3df1dcdca76e2962c370a7c60604d9e99ab4d
 	function(httpResponse) {
 	    if(error){
 	    	error('Request failed with response code ' + httpResponse.status);
@@ -54,10 +74,11 @@ var getIdFn = function(node){
 	}
 
 var processNodeFn = function(node,length){
+	node.length = length;
 	if(randomDepth.contains(length)){
 		nodes.push(node);
-		if(nodes.length==4) return true;
-		else false;
+		randomDepth.splice(nodes.indexOf(length), 1);
+		return nodes.length == 4
 	}	
 }
 
@@ -65,11 +86,11 @@ function generateUniqRandom(){
 	var numbArr = [];
 	for (var i = 0; i < 4; i++) {
 		do {
-			var numb = Math.floor((Math.random()*10)+1);
+			var numb = Math.floor((Math.random()*4)+1);
 		} while (numbArr.indexOf(numb)>-1)
 		numbArr[i]=numb;
 	};
-	return numbArr;
+	console.log(numbArr);
 }
 
 Array.prototype.contains = function(obj){

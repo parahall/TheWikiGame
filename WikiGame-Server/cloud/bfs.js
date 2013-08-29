@@ -17,14 +17,18 @@ module.exports = function(source, getAdjFn, processNodeFn, getIdFn){
 /*
 BFS algorithm
 */
-module.exports.process = function(){
+module.exports.process = function(callback){
 	var isFinished = false;
-	var queue = [];
-	queue.push(config.source);
+	var queue = [config.source];
 	setLength(config.source,0);
-	while(queue.length > 0 && !isFinished){
-		var currentNode = queue.shift();
-		var adjNodes = config.getAdjFn(currentNode);
+	nextIteration(queue, callback);
+}
+
+var iteration = 0;
+function nextIteration(queue, callback){
+	console.log(++iteration);
+	var currentNode = queue.shift();
+	config.getAdjFn(currentNode, function(adjNodes){
 		for (var i = 0; i < adjNodes.length; i++) {
 			var node = adjNodes[i];
 			if (!isMarked(node)) {
@@ -34,8 +38,15 @@ module.exports.process = function(){
 			};
 		};
 		isFinished = config.processNodeFn(currentNode,getLength(currentNode));
-	}
+		if(queue.length > 0 && !isFinished){
+			nextIteration(queue, callback);
+		}
+		else{
+			callback();
+		}
+	});
 }
+
 var markedObjects = [];
 var nodesLenght = {};
 function mark(node){
