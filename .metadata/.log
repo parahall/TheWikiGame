@@ -82,3 +82,6 @@ org.eclipse.core.internal.resources.ResourceException: A resource already exists
 	at org.eclipse.jface.operation.ModalContext$ModalContextThread.run(ModalContext.java:121)
 !SUBENTRY 1 org.eclipse.core.resources 4 272 2013-08-29 21:08:12.934
 !MESSAGE A resource already exists on disk 'D:\Code\TheWikiGame\WikiGame\.settings'.
+
+!ENTRY org.eclipse.ui 2 2 2013-08-29 21:52:52.092
+!MESSAGE Invalid property category path: ValidationPropertiesPage (bundle: org.eclipse.wst.xml.ui, propertyPage: org.eclipse.wst.xml.ui.propertyPage.project.validation)
