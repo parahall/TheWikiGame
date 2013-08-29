@@ -28,12 +28,14 @@ module.exports.generateNewGame = function(success, error){
 
 
 var getAdjFn = function(node){
+	console.log("insideAdjFUnc");
+	console.log(node);
 
 	wikiApi.getArticleLinks(function(httpResponse) {
 		for(link in httpResponse.data.query.pages){
 			console.log(link);
 		}
-
+		return [];
 	}, 	   
 	function(httpResponse) {
 	    if(error){
@@ -41,7 +43,6 @@ var getAdjFn = function(node){
 	    }
 	  }, 
 	  getIdFn(node));
-	return [];
 };
 
 var randomDepth = generateUniqRandom();
