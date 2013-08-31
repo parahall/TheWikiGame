@@ -12,14 +12,20 @@
 <fullyQualifiedTypeName name="com.example.wikigame.R.id"/>
 <fullyQualifiedTypeName name="android.widget.LinearLayout"/>
 <fullyQualifiedTypeName name="android.content.DialogInterface"/>
-<fullyQualifiedTypeName name="android.widget.TextView"/>
 <fullyQualifiedTypeName name="com.example.wikigame.IFinishNotify"/>
 <fullyQualifiedTypeName name="com.parse.ParseQuery"/>
 <fullyQualifiedTypeName name="com.parse.GetCallback"/>
 <fullyQualifiedTypeName name="com.example.wikigame.GameStatus"/>
 <fullyQualifiedTypeName name="com.parse.ParseObject"/>
-<fullyQualifiedTypeName name="com.example.wikigame.GameManager"/>
 <fullyQualifiedTypeName name="com.example.wikigame.UserManager"/>
 <fullyQualifiedTypeName name="com.example.wikigame.PlayerStatus"/>
 <fullyQualifiedTypeName name="com.parse.SaveCallback"/>
+<fullyQualifiedTypeName name="android.widget.TextView"/>
+<fullyQualifiedTypeName name="android.os.SystemClock"/>
+<fullyQualifiedTypeName name="android.os.Handler"/>
+<fullyQualifiedTypeName name="com.example.wikigame.GameActivity"/>
+<fullyQualifiedTypeName name="java.util.TimerTask"/>
+<fullyQualifiedTypeName name="java.lang.System"/>
+<fullyQualifiedTypeName name="java.lang.Runnable"/>
+<fullyQualifiedTypeName name="com.example.wikigame.GameManager"/>
 </qualifiedTypeNameHistroy>

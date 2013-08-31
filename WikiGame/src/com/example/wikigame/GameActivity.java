@@ -2,6 +2,8 @@ package com.example.wikigame;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -13,21 +15,24 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
-public class GameActivity extends Activity implements IFinishNotify<Game>{
+public class GameActivity extends Activity implements IFinishNotify<Game> {
 
 	private ProgressDialog pd;
 	private ArrayList<Button> btnList;
 	private LinearLayout mainLayout;
 	private HashMap<Button, Integer> dictinory;
-	
+	private TextView gameTimer;
+	private Timer timer;
+	private int timeForGame; 
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		btnList = new ArrayList<Button>();
 		setContentView(R.layout.game_play);
 		mainLayout = (LinearLayout) findViewById(R.id.layout_main);
-
+		gameTimer = (TextView) findViewById(R.id.timerValue);
 		btnList.add((Button) findViewById(R.id.btn_source));
 		btnList.add((Button) findViewById(R.id.btn_target1));
 		btnList.add((Button) findViewById(R.id.btn_target2));
@@ -36,7 +41,30 @@ public class GameActivity extends Activity implements IFinishNotify<Game>{
 		Log.d("buildGame", "" + btnList.size());
 
 		initializeTheGame();
+		
 
+	}
+
+	private void initTimer() {
+		timeForGame = GameManager.getInstance().getGameTimer();
+		timer = new Timer();
+		timer.schedule(new CalcRemainingSecTask(), 1000, 1000);
+	}
+	
+	class CalcRemainingSecTask extends TimerTask {
+
+		@Override
+		public void run() {
+			final long remainingSec = (timeForGame-(System.currentTimeMillis()-GameManager.getInstance().getCurrentGame().getActiveTime()))/1000;
+			runOnUiThread(new Runnable() {
+				
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					gameTimer.setText(""+remainingSec+"s remaining");
+				}
+			});			
+		}
 	}
 
 	private void initializeTheGame() {
@@ -66,12 +94,11 @@ public class GameActivity extends Activity implements IFinishNotify<Game>{
 			dictinory.put(btnList.get(i + 1), game.getDestination().get(i)
 					.getId());
 		}
+		initTimer();
 		pd.dismiss();
 		mainLayout.setVisibility(LinearLayout.VISIBLE);
 
 	}
-
-
 
 	protected void popupAlertDialog(Exception e) {
 		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
@@ -99,19 +126,20 @@ public class GameActivity extends Activity implements IFinishNotify<Game>{
 	public void answerClicked(View v) {
 
 		int targetId = dictinory.get(v);
-		if (targetId == GameManager.getInstance().getCurrentGame().getWinArticle().getId()) {
-			popupMsg("win",v);
+		if (targetId == GameManager.getInstance().getCurrentGame()
+				.getWinArticle().getId()) {
+			popupMsg("win", v);
 			UserManager.getInstance().updateScore("win");
 			GameManager.getInstance().finishGame();
 		} else {
-			popupMsg("lost",v);
+			popupMsg("lost", v);
 			GameManager.getInstance().updateStatus(GameStatus.Played);
 		}
 
 	}
 
 	private void popupMsg(String string, View v) {
-		
+
 		String shortest = "shortest";
 		String congratulations = "Congratulations!";
 		if (string == "lost") {
@@ -123,8 +151,9 @@ public class GameActivity extends Activity implements IFinishNotify<Game>{
 		alertDialogBuilder.setTitle("You " + string + " a game");
 		alertDialogBuilder
 				.setMessage(
-						"You have choose "+((Button)v).getText()+" and its " + shortest
-								+ " path!" + congratulations
+						"You have choose " + ((Button) v).getText()
+								+ " and its " + shortest + " path!"
+								+ congratulations
 								+ "\nWould you like to play another game?")
 				.setCancelable(true)
 				.setPositiveButton("Yes",
@@ -154,7 +183,8 @@ public class GameActivity extends Activity implements IFinishNotify<Game>{
 
 	@Override
 	public void onError(Exception e) {
-		popupAlertDialog(e);		
+		popupAlertDialog(e);
 	}
+
 
 }

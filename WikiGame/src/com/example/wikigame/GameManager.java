@@ -6,16 +6,15 @@ import java.util.HashMap;
 import android.util.Log;
 
 import com.parse.FunctionCallback;
-import com.parse.GetCallback;
 import com.parse.ParseCloud;
 import com.parse.ParseException;
 import com.parse.ParseObject;
-import com.parse.ParseQuery;
 import com.parse.SaveCallback;
 
 public class GameManager {
 
 	private Game game;
+	private int timeForGame = (120*1000);
 	private static GameManager instance = new GameManager();
 
 	private GameManager() {
@@ -29,6 +28,10 @@ public class GameManager {
 		return game;
 	}
 
+	public int getGameTimer(){
+		return timeForGame;
+	}
+	
 	@SuppressWarnings("unchecked")
 	public Game parseGameFromObject(HashMap<String, Object> object) {
 		ArrayList<Article> articles = new ArrayList<Article>();
