@@ -10,11 +10,10 @@
         android:layout_height="fill_parent"
         android:layout_weight="0.2" >
 
-        <ImageView
-            android:id="@+id/imageView1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:src="@drawable/thewikigame" />
+        <come.example.wikigame.views.UsersPanel
+                android:id="@+id/usersPanel"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"/>
     </ScrollView>
 
     <LinearLayout

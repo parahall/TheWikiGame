@@ -2,6 +2,7 @@ package com.example.wikigame;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -17,6 +18,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import come.example.wikigame.views.UsersPanel;
+
 public class GameActivity extends Activity implements IFinishNotify<Game> {
 
 	private ProgressDialog pd;
@@ -25,12 +28,14 @@ public class GameActivity extends Activity implements IFinishNotify<Game> {
 	private HashMap<Button, Integer> dictinory;
 	private TextView gameTimer;
 	private Timer timer;
-	private int timeForGame; 
+	private int timeForGame;
+    private UsersPanel usersPanel;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		btnList = new ArrayList<Button>();
 		setContentView(R.layout.game_play);
+        usersPanel = (UsersPanel)findViewById(R.id.usersPanel);
 		mainLayout = (LinearLayout) findViewById(R.id.layout_main);
 		gameTimer = (TextView) findViewById(R.id.timerValue);
 		btnList.add((Button) findViewById(R.id.btn_source));
@@ -55,17 +60,28 @@ public class GameActivity extends Activity implements IFinishNotify<Game> {
 
 		@Override
 		public void run() {
-			final long remainingSec = (timeForGame-(System.currentTimeMillis()-GameManager.getInstance().getCurrentGame().getActiveTime()))/1000;
 			runOnUiThread(new Runnable() {
 				
 				@Override
 				public void run() {
-					// TODO Auto-generated method stub
-					gameTimer.setText(""+remainingSec+"s remaining");
+					updateGame();
 				}
 			});			
 		}
 	}
+
+    private void updateGame(){
+        final long remainingSec = (timeForGame-(System.currentTimeMillis()-GameManager.getInstance().getCurrentGame().getActiveTime()))/1000;
+        gameTimer.setText(""+remainingSec+"s remaining");
+        updateUsersPanel();
+    }
+
+    private Random rnd = new Random();
+    private void updateUsersPanel(){
+        int activeUsers = rnd.nextInt(5);
+        int inactiveUsers = activeUsers + 1;
+        usersPanel.updatePanel(activeUsers, inactiveUsers);
+    }
 
 	private void initializeTheGame() {
 		mainLayout.setVisibility(LinearLayout.GONE);
