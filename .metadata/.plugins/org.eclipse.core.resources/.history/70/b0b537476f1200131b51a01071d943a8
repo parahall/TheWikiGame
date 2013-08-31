@@ -1,0 +1,210 @@
+package com.example.wikigame;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import come.example.wikigame.views.UsersPanel;
+
+public class GameActivity extends Activity implements IFinishNotify<Game> {
+
+	private ProgressDialog pd;
+	private ArrayList<Button> btnList;
+	private LinearLayout mainLayout;
+	private HashMap<Button, Integer> dictinory;
+	private TextView gameTimer;
+	private Timer timer;
+	private int timeForGame;
+    private UsersPanel usersPanel;
+
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		btnList = new ArrayList<Button>();
+		setContentView(R.layout.game_play);
+        usersPanel = (UsersPanel)findViewById(R.id.usersPanel);
+		mainLayout = (LinearLayout) findViewById(R.id.layout_main);
+		gameTimer = (TextView) findViewById(R.id.timerValue);
+		btnList.add((Button) findViewById(R.id.btn_source));
+		btnList.add((Button) findViewById(R.id.btn_target1));
+		btnList.add((Button) findViewById(R.id.btn_target2));
+		btnList.add((Button) findViewById(R.id.btn_target3));
+		btnList.add((Button) findViewById(R.id.btn_target4));
+		Log.d("buildGame", "" + btnList.size());
+
+		initializeTheGame();
+		
+
+	}
+
+	private void initTimer() {
+		timeForGame = GameManager.getInstance().getGameTimer();
+		timer = new Timer();
+		timer.schedule(new CalcRemainingSecTask(), 1000, 1000);
+	}
+	
+	class CalcRemainingSecTask extends TimerTask {
+
+		@Override
+		public void run() {
+			runOnUiThread(new Runnable() {
+				
+				@Override
+				public void run() {
+					updateGame();
+				}
+			});			
+		}
+	}
+
+    private void updateGame(){
+        final long remainingSec = (timeForGame-(System.currentTimeMillis()-GameManager.getInstance().getCurrentGame().getActiveTime()))/1000;
+        gameTimer.setText(""+remainingSec+"s remaining");
+        updateUsersPanel();
+    }
+
+    private void updateUsersPanel(){
+        GameManager.getInstance().getCurrentUsers();
+        usersPanel.updatePanel(GameManager.getInstance().getActiveUsers(), GameManager.getInstance().getInactiveUsers());
+    }
+
+	private void initializeTheGame() {
+		mainLayout.setVisibility(LinearLayout.GONE);
+		pd = new ProgressDialog(this);
+		pd.setTitle("Processing...");
+		pd.setMessage("Please wait.");
+		pd.setCancelable(true);
+		pd.setOnCancelListener(new OnCancelListener() {
+
+			@Override
+			public void onCancel(DialogInterface dialog) {
+				GameActivity.this.finish();
+			}
+		});
+		pd.setIndeterminate(true);
+		pd.show();
+		GameManager.getInstance().getGameFromServer(this);
+
+	}
+
+	protected void StartGame(Game game) {
+		dictinory = new HashMap<Button, Integer>();
+		btnList.get(0).setText(game.getSource().getTitle());
+		for (int i = 0; i < game.getDestination().size(); i++) {
+			btnList.get(i + 1).setText(game.getDestination().get(i).getTitle());
+			dictinory.put(btnList.get(i + 1), game.getDestination().get(i)
+					.getId());
+		}
+		initTimer();
+		pd.dismiss();
+		GameManager.getInstance().setAlreadyPlayed(true);
+		mainLayout.setVisibility(LinearLayout.VISIBLE);
+	}
+
+	protected void popupAlertDialog(Exception e) {
+		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+		alertDialogBuilder.setTitle("Failed to obtain new Game");
+		alertDialogBuilder
+				.setMessage(
+						"Message: There is problem to retrieve new game from server of maybe there is no new game ready for you.\n Click yes to exit!")
+				.setCancelable(false)
+				.setPositiveButton("Yes",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								// if this button is clicked, close
+								// current activity
+								GameActivity.this.finish();
+							}
+						});
+
+		// create alert dialog
+		AlertDialog alertDialog = alertDialogBuilder.create();
+
+		// show it
+		alertDialog.show();
+	}
+
+	public void answerClicked(View v) {
+
+		int targetId = dictinory.get(v);
+		if (targetId == GameManager.getInstance().getCurrentGame()
+				.getWinArticle().getId()) {
+			popupMsg("win", v);
+			UserManager.getInstance().updateScore("win");
+			GameManager.getInstance().finishGame();
+		} else {
+			popupMsg("lost", v);
+			GameManager.getInstance().updateStatus(GameStatus.Played);
+		}
+
+	}
+
+	private void popupMsg(String string, View v) {
+
+		String shortest = "shortest";
+		String congratulations = "Congratulations!";
+		if (string == "lost") {
+			shortest = "not " + shortest;
+			congratulations = "Sorry :(";
+		}
+
+		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+		alertDialogBuilder.setTitle("You " + string + " a game");
+		alertDialogBuilder
+				.setMessage(
+						"You have choose " + ((Button) v).getText()
+								+ " and its " + shortest + " path!"
+								+ congratulations
+								+ "\nWould you like to play another game?")
+				.setCancelable(true)
+				.setPositiveButton("Yes",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								initializeTheGame();
+							}
+						})
+				.setNegativeButton("No", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						GameActivity.this.finish();
+					}
+				}).setCancelable(false);
+
+		// create alert dialog
+		AlertDialog alertDialog = alertDialogBuilder.create();
+
+		// show it
+		alertDialog.show();
+
+	}
+
+	@Override
+	public void onFinished(Game game) {
+		if(!GameManager.getInstance().isAlreadyPlayed()) StartGame(game);
+		showWait();
+	}
+
+
+	@Override
+	public void onError(Exception e) {
+		popupAlertDialog(e);
+	}
+
+	private void showWait() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+}

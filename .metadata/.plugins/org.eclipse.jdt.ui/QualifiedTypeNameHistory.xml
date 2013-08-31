@@ -26,7 +26,8 @@
 <fullyQualifiedTypeName name="java.lang.Runnable"/>
 <fullyQualifiedTypeName name="com.parse.ParseObject"/>
 <fullyQualifiedTypeName name="com.example.wikigame.GameStatus"/>
-<fullyQualifiedTypeName name="com.example.wikigame.PlayerStatus"/>
 <fullyQualifiedTypeName name="com.parse.CountCallback"/>
+<fullyQualifiedTypeName name="com.example.wikigame.PlayerStatus"/>
 <fullyQualifiedTypeName name="com.example.wikigame.GameManager"/>
+<fullyQualifiedTypeName name="android.app.Activity"/>
 </qualifiedTypeNameHistroy>

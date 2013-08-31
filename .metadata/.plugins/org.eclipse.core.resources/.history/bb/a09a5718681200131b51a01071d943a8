@@ -1,0 +1,169 @@
+package com.example.wikigame;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import android.util.Log;
+
+import com.parse.CountCallback;
+import com.parse.FunctionCallback;
+import com.parse.ParseCloud;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.SaveCallback;
+
+public class GameManager {
+
+	private Game game;
+	private int timeForGame = (120 * 1000);
+	private int activeUsers = 0;
+	private int inactiveUsers =  0;
+	private static GameManager instance = new GameManager();
+
+	private GameManager() {
+	}
+
+	public static GameManager getInstance() {
+		return instance;
+	}
+
+	public Game getCurrentGame() {
+		return game;
+	}
+
+	public int getGameTimer() {
+		return timeForGame;
+	}
+
+	@SuppressWarnings("unchecked")
+	public Game parseGameFromObject(HashMap<String, Object> object) {
+		ArrayList<Article> articles = new ArrayList<Article>();
+		Article source = new Article(
+				((ParseObject) object.get("source")).getInt("article_id"),
+				((ParseObject) object.get("source")).getString("title"));
+		articles.add(source);
+
+		ArrayList<ParseObject> destinations = (ArrayList<ParseObject>) object
+				.get("destinations");
+		for (ParseObject dest : destinations) {
+			articles.add(new Article(dest.getInt("article_id"), dest
+					.getString("title")));
+		}
+
+		ArrayList<Integer> shortPathlengths = (ArrayList<Integer>) object
+				.get("articles_depth");
+		Article winArticles = new Article(
+				((ParseObject) object.get("winner_article"))
+						.getInt("article_id"),
+				((ParseObject) object.get("winner_article")).getString("title"));
+
+		String objectId = object.get("objectId").toString();
+		Long activeTime = Long.parseLong(object.get("active_time").toString());
+		Game game = new Game(source, articles, shortPathlengths, winArticles,
+				objectId, activeTime);
+		this.game = game;
+
+		signInCurrUserForGame();
+
+		return game;
+	}
+
+	private void signInCurrUserForGame() {
+		ParseQuery<ParseObject> query = ParseQuery.getQuery("GameUser");
+		ParseObject gameUserMapping = new ParseObject("GameUser");
+
+		ParseObject user = ParseObject.createWithoutData("_User", UserManager
+				.getInstance().GetCurrentUser().getObjectId());
+		ParseObject gameParse = ParseObject.createWithoutData("Game",
+				game.getObjectId());
+
+		query.whereEqualTo("game", gameParse).whereEqualTo("user", user);
+		int count = 0;
+		try {
+			count = query.count();
+			Log.d("SavingMapping", ""+count);
+		} catch (ParseException e1) {
+			Log.d("SavingMapping","Failed obtain number of games");
+			e1.printStackTrace();
+		}
+		if(count==0){
+		gameUserMapping.put("user", user);
+		gameUserMapping.put("game", gameParse);
+		gameUserMapping.put("status", PlayerStatus.Playing.getCode());
+		gameUserMapping.saveInBackground(new SaveCallback() {
+
+			@Override
+			public void done(ParseException e) {
+				if (e != null) {
+					Log.d("SavingMapping", e.getMessage());
+				} else {
+					Log.d("SavingMapping", "success");
+				}
+			}
+		});
+		}
+
+
+	}
+
+	public void getGameFromServer(final IFinishNotify<Game> callback) {
+		HashMap<String, Object> param = new HashMap<String, Object>();
+
+		ParseCloud.callFunctionInBackground("getGame", param,
+				new FunctionCallback<HashMap<String, Object>>() {
+					@Override
+					public void done(HashMap<String, Object> object,
+							ParseException e) {
+						if (e == null) {
+							Log.d("gameDebug", "succeed to obtain the game");
+							callback.onFinished(parseGameFromObject(object));
+						} else {
+							callback.onError(e);
+						}
+					}
+				});
+	}
+
+	public void finishGame() {
+		ParseObject gameParse = ParseObject.createWithoutData("Game",
+				game.getObjectId());
+		gameParse.put("status", GameStatus.Played.getCode());
+		gameParse.saveInBackground();
+
+	}
+
+	public void updateStatus(GameStatus played) {
+
+	}
+
+	public void getCurrentUsers(int code) {
+		ParseQuery<ParseObject> query = ParseQuery.getQuery("GameUser");
+		ParseObject gameParse = ParseObject.createWithoutData("Game",
+				game.getObjectId());
+		query.whereEqualTo("game", gameParse).whereEqualTo("status", code);
+		query.countInBackground(new CountCallback() {
+			
+			@Override
+			public void done(int count, ParseException e) {
+				setActiveUsers(count);
+			}
+		});
+	}
+
+	public int getActiveUsers() {
+		return activeUsers;
+	}
+
+	public void setActiveUsers(int activeUsers) {
+		this.activeUsers = activeUsers;
+	}
+
+	public int getInactiveUsers() {
+		return inactiveUsers;
+	}
+
+	public void setInactiveUsers(int inactiveUsers) {
+		this.inactiveUsers = inactiveUsers;
+	}
+}

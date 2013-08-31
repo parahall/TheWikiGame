@@ -18,8 +18,9 @@ public class GameManager {
 	private Game game;
 	private int timeForGame = (120 * 1000);
 	private int activeUsers = 0;
-	private int inactiveUsers =  0;
+	private int inactiveUsers = 0;
 	private static GameManager instance = new GameManager();
+	private ParseObject gameUserMapping;
 
 	private GameManager() {
 	}
@@ -71,7 +72,7 @@ public class GameManager {
 
 	private void signInCurrUserForGame() {
 		ParseQuery<ParseObject> query = ParseQuery.getQuery("GameUser");
-		ParseObject gameUserMapping = new ParseObject("GameUser");
+		gameUserMapping = new ParseObject("GameUser");
 
 		ParseObject user = ParseObject.createWithoutData("_User", UserManager
 				.getInstance().GetCurrentUser().getObjectId());
@@ -82,28 +83,27 @@ public class GameManager {
 		int count = 0;
 		try {
 			count = query.count();
-			Log.d("SavingMapping", ""+count);
+			Log.d("SavingMapping", "" + count);
 		} catch (ParseException e1) {
-			Log.d("SavingMapping","Failed obtain number of games");
+			Log.d("SavingMapping", "Failed obtain number of games");
 			e1.printStackTrace();
 		}
-		if(count==0){
-		gameUserMapping.put("user", user);
-		gameUserMapping.put("game", gameParse);
-		gameUserMapping.put("status", PlayerStatus.Playing.getCode());
-		gameUserMapping.saveInBackground(new SaveCallback() {
+		if (count == 0) {
+			gameUserMapping.put("user", user);
+			gameUserMapping.put("game", gameParse);
+			gameUserMapping.put("status", PlayerStatus.Playing.getCode());
+			gameUserMapping.saveInBackground(new SaveCallback() {
 
-			@Override
-			public void done(ParseException e) {
-				if (e != null) {
-					Log.d("SavingMapping", e.getMessage());
-				} else {
-					Log.d("SavingMapping", "success");
+				@Override
+				public void done(ParseException e) {
+					if (e != null) {
+						Log.d("SavingMapping", e.getMessage());
+					} else {
+						Log.d("SavingMapping", "success");
+					}
 				}
-			}
-		});
+			});
 		}
-
 
 	}
 
@@ -134,21 +134,48 @@ public class GameManager {
 	}
 
 	public void updateStatus(GameStatus played) {
-
+		gameUserMapping.put("status", PlayerStatus.Lost.getCode());
+		gameUserMapping.saveInBackground();
+		finishGame();
 	}
 
-	public void getCurrentUsers(int code) {
-		ParseQuery<ParseObject> query = ParseQuery.getQuery("GameUser");
+	public void getCurrentUsers() {
+		ParseQuery<ParseObject> queryActiveUsers = ParseQuery
+				.getQuery("GameUser");
 		ParseObject gameParse = ParseObject.createWithoutData("Game",
 				game.getObjectId());
-		query.whereEqualTo("game", gameParse).whereEqualTo("status", code);
-		query.countInBackground(new CountCallback() {
-			
-			@Override
-			public void done(int count, ParseException e) {
-				setActiveUsers(count);
-			}
-		});
+		if (queryActiveUsers != null) {
+
+			queryActiveUsers.whereEqualTo("game", gameParse).whereEqualTo(
+					"status", PlayerStatus.Playing.getCode());
+
+			queryActiveUsers.countInBackground(new CountCallback() {
+
+				@Override
+				public void done(int count, ParseException e) {
+					if (e == null) {
+						setActiveUsers(count);
+					}
+				}
+			});
+		}
+
+		ParseQuery<ParseObject> queryInactiveUsers = ParseQuery
+				.getQuery("GameUser");
+		if (queryInactiveUsers != null) {
+			queryInactiveUsers.whereEqualTo("game", gameParse).whereEqualTo(
+					"status", PlayerStatus.Lost.getCode());
+			queryInactiveUsers.countInBackground(new CountCallback() {
+
+				@Override
+				public void done(int count, ParseException e) {
+					if (e == null) {
+						setInactiveUsers(count);
+					}
+				}
+			});
+		}
+
 	}
 
 	public int getActiveUsers() {
@@ -166,4 +193,5 @@ public class GameManager {
 	public void setInactiveUsers(int inactiveUsers) {
 		this.inactiveUsers = inactiveUsers;
 	}
+
 }

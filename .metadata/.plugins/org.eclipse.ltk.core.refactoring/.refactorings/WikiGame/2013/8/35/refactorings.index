@@ -10,3 +10,6 @@
 1377959515794	Rename method 'signInForGame'
 1377971264710	Encapsulate field 'activeUsers'
 1377971268819	Encapsulate field 'inactiveUsers'
+1377972513083	Rename local variable 'query'
+1377972564648	Rename local variable 'query'
+1377974551090	Encapsulate field 'alreadyPlayed'
