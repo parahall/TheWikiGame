@@ -16,6 +16,11 @@ exports.getActiveGame = function(success, error) {
   			game.id = results[0].id;
   			if(results[0].get("status")==ready){
   				game.set("status",active);
+          var d = new Date();
+          var timeStamp =  d.getTime()
+          game.set("active_time",timeStamp);
+          results[0].set("active_time",timeStamp); 
+
   				game.save();	
   			}
 
@@ -28,6 +33,10 @@ exports.getActiveGame = function(success, error) {
   			gameInJSon.destinations=result;
   				success(gameInJSon);
   			}});
+
+        
+
+
   			
   		},
   		error: function(parseError){

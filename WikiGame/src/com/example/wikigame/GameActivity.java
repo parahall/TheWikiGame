@@ -20,7 +20,7 @@ public class GameActivity extends Activity implements IFinishNotify<Game>{
 	private ArrayList<Button> btnList;
 	private LinearLayout mainLayout;
 	private HashMap<Button, Integer> dictinory;
-	private Game game;
+	
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -59,7 +59,6 @@ public class GameActivity extends Activity implements IFinishNotify<Game>{
 	}
 
 	protected void StartGame(Game game) {
-		this.game = game;
 		dictinory = new HashMap<Button, Integer>();
 		btnList.get(0).setText(game.getSource().getTitle());
 		for (int i = 0; i < game.getDestination().size(); i++) {
@@ -100,12 +99,13 @@ public class GameActivity extends Activity implements IFinishNotify<Game>{
 	public void answerClicked(View v) {
 
 		int targetId = dictinory.get(v);
-		if (targetId == game.getWinArticle().getId()) {
+		if (targetId == GameManager.getInstance().getCurrentGame().getWinArticle().getId()) {
 			popupMsg("win",v);
 			UserManager.getInstance().updateScore("win");
-
+			GameManager.getInstance().finishGame();
 		} else {
 			popupMsg("lost",v);
+			GameManager.getInstance().updateStatus(GameStatus.Played);
 		}
 
 	}
@@ -149,7 +149,6 @@ public class GameActivity extends Activity implements IFinishNotify<Game>{
 
 	@Override
 	public void onFinished(Game game) {
-
 		StartGame(game);
 	}
 

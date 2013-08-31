@@ -11,10 +11,11 @@ import com.parse.ParseCloud;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
-
+import com.parse.SaveCallback;
 
 public class GameManager {
-	
+
+	private Game game;
 	private static GameManager instance = new GameManager();
 
 	private GameManager() {
@@ -24,7 +25,10 @@ public class GameManager {
 		return instance;
 	}
 
-	
+	public Game getCurrentGame() {
+		return game;
+	}
+
 	@SuppressWarnings("unchecked")
 	public Game parseGameFromObject(HashMap<String, Object> object) {
 		ArrayList<Article> articles = new ArrayList<Article>();
@@ -46,27 +50,33 @@ public class GameManager {
 				((ParseObject) object.get("winner_article"))
 						.getInt("article_id"),
 				((ParseObject) object.get("winner_article")).getString("title"));
-		
+
 		String objectId = object.get("objectId").toString();
-		Game game = new Game(source, articles, shortPathlengths, winArticles,objectId);
+		Long activeTime = Long.parseLong(object.get("active_time").toString());
+		Game game = new Game(source, articles, shortPathlengths, winArticles,
+				objectId,activeTime);
+		this.game=game;
 		
-		signInForGame(game);
+		signInForGame();
+		
 
 		return game;
 	}
 
-	private void signInForGame(Game game) {
-		ParseObject gameParse = ParseObject.createWithoutData("Game", game.getObjectId());
+	private void signInForGame() {
+		ParseObject gameUserMapping = new ParseObject("GameUser");
 		
-		 ParseQuery<ParseObject> query = ParseQuery.getQuery("GameUser");
-		 query.getFirstInBackground(new GetCallback<ParseObject>() {
+		gameUserMapping.put("user", ParseObject.createWithoutData("_User",UserManager.getInstance().GetCurrentUser().getObjectId()));
+		gameUserMapping.put("game", ParseObject.createWithoutData("Game",game.getObjectId()));
+		gameUserMapping.put("status", PlayerStatus.Playing.getCode());		
+		gameUserMapping.saveInBackground(new SaveCallback() {
 			
 			@Override
-			public void done(ParseObject object, ParseException e) {
-				if(e==null){
-					//Put what to do.
+			public void done(ParseException e) {
+				if(e!=null){
+					Log.d("SavingMapping", e.getMessage());
 				} else {
-					Log.d("SignInToGame",e.getMessage());
+					Log.d("SavingMapping", "success");
 				}
 			}
 		});
@@ -83,12 +93,23 @@ public class GameManager {
 							ParseException e) {
 						if (e == null) {
 							Log.d("gameDebug", "succeed to obtain the game");
-							Game game = parseGameFromObject(object);
-							callback.onFinished(game);
+							callback.onFinished(parseGameFromObject(object));
 						} else {
 							callback.onError(e);
 						}
 					}
 				});
+	}
+
+	public void finishGame() {
+		ParseObject gameParse = ParseObject.createWithoutData("Game",
+				game.getObjectId());
+		gameParse.put("status", GameStatus.Played.getCode());
+		gameParse.saveInBackground();
+
+	}
+
+	public void updateStatus(GameStatus played) {
+		
 	}
 }

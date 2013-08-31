@@ -1,0 +1,10 @@
+Login:
+heroku login
+-------------------------------
+To deploy to heroku:
+git add .
+git commit -m "message"
+git push heroku master
+--------------------------------
+To check logs:
+heroku logs
