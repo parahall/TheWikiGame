@@ -4,16 +4,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.util.Log;
-import android.widget.LinearLayout;
 
 import com.parse.FunctionCallback;
 import com.parse.ParseCloud;
 import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.SaveCallback;
 
 public class GameManager {
 
-	
+	private Game game;
+	private int timeForGame = (120*1000);
 	private static GameManager instance = new GameManager();
 
 	private GameManager() {
@@ -21,6 +22,14 @@ public class GameManager {
 
 	public static GameManager getInstance() {
 		return instance;
+	}
+
+	public Game getCurrentGame() {
+		return game;
+	}
+
+	public int getGameTimer(){
+		return timeForGame;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -44,14 +53,40 @@ public class GameManager {
 				((ParseObject) object.get("winner_article"))
 						.getInt("article_id"),
 				((ParseObject) object.get("winner_article")).getString("title"));
-		
+
 		String objectId = object.get("objectId").toString();
-		Game game = new Game(source, articles, shortPathlengths, winArticles,objectId);
+		Long activeTime = Long.parseLong(object.get("active_time").toString());
+		Game game = new Game(source, articles, shortPathlengths, winArticles,
+				objectId,activeTime);
+		this.game=game;
+		
+		signInCurrUserForGame();
+		
 
 		return game;
 	}
 
-	public void getGame() {
+	private void signInCurrUserForGame() {
+		ParseObject gameUserMapping = new ParseObject("GameUser");
+		
+		gameUserMapping.put("user", ParseObject.createWithoutData("_User",UserManager.getInstance().GetCurrentUser().getObjectId()));
+		gameUserMapping.put("game", ParseObject.createWithoutData("Game",game.getObjectId()));
+		gameUserMapping.put("status", PlayerStatus.Playing.getCode());		
+		gameUserMapping.saveInBackground(new SaveCallback() {
+			
+			@Override
+			public void done(ParseException e) {
+				if(e!=null){
+					Log.d("SavingMapping", e.getMessage());
+				} else {
+					Log.d("SavingMapping", "success");
+				}
+			}
+		});
+		
+	}
+
+	public void getGameFromServer(final IFinishNotify<Game> callback) {
 		HashMap<String, Object> param = new HashMap<String, Object>();
 
 		ParseCloud.callFunctionInBackground("getGame", param,
@@ -61,16 +96,23 @@ public class GameManager {
 							ParseException e) {
 						if (e == null) {
 							Log.d("gameDebug", "succeed to obtain the game");
-							StartGame(object);
-							pd.dismiss();
-							mainLayout.setVisibility(LinearLayout.VISIBLE);
+							callback.onFinished(parseGameFromObject(object));
 						} else {
-							popupAlertDialog(e);
+							callback.onError(e);
 						}
 					}
 				});
 	}
-	
-	
-	
+
+	public void finishGame() {
+		ParseObject gameParse = ParseObject.createWithoutData("Game",
+				game.getObjectId());
+		gameParse.put("status", GameStatus.Played.getCode());
+		gameParse.saveInBackground();
+
+	}
+
+	public void updateStatus(GameStatus played) {
+		
+	}
 }

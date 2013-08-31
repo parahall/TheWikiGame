@@ -69,38 +69,39 @@ public class GameManager {
 
 	private void signInCurrUserForGame() {
 		ParseQuery<ParseObject> query = ParseQuery.getQuery("GameUser");
-		ParseObject gameUserMapping = new ParseObject("GameUser");
+		final ParseObject gameUserMapping = new ParseObject("GameUser");
 
-		ParseObject user = ParseObject.createWithoutData("_User", UserManager
+		final ParseObject user = ParseObject.createWithoutData("_User", UserManager
 				.getInstance().GetCurrentUser().getObjectId());
-		ParseObject gameParse = ParseObject.createWithoutData("Game",
+		final ParseObject gameParse = ParseObject.createWithoutData("Game",
 				game.getObjectId());
 
-		query.whereEqualTo("game", gameParse).whereEqualTo("user", user);
-		int count = 0;
-		try {
-			count = query.count();
-			Log.d("SavingMapping", ""+count);
-		} catch (ParseException e1) {
-			Log.d("SavingMapping","Failed obtain number of games");
-			e1.printStackTrace();
-		}
-		if(count==0){
-		gameUserMapping.put("user", user);
-		gameUserMapping.put("game", gameParse);
-		gameUserMapping.put("status", PlayerStatus.Playing.getCode());
-		gameUserMapping.saveInBackground(new SaveCallback() {
-
+		query.whereEqualTo("Game", gameParse).whereEqualTo("_User", user);
+		query.countInBackground(new CountCallback() {
+			
 			@Override
-			public void done(ParseException e) {
-				if (e != null) {
-					Log.d("SavingMapping", e.getMessage());
+			public void done(int count, ParseException e) {
+				
+				if(count==0 && e==null){
+					gameUserMapping.put("user", user);
+					gameUserMapping.put("game", gameParse);
+					gameUserMapping.put("status", PlayerStatus.Playing.getCode());
+					gameUserMapping.saveInBackground(new SaveCallback() {
+
+						@Override
+						public void done(ParseException e) {
+							if (e != null) {
+								Log.d("SavingMapping", e.getMessage());
+							} else {
+								Log.d("SavingMapping", "success");
+							}
+						}
+					});
 				} else {
-					Log.d("SavingMapping", "success");
+					Log.d("SavingMapping", e.getMessage());
 				}
 			}
 		});
-		}
 
 
 	}

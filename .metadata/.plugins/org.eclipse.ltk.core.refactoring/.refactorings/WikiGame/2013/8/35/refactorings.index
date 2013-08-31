@@ -7,3 +7,4 @@
 1377944024431	Move compilation unit
 1377953108952	Encapsulate field 'activeTime'
 1377957977568	Rename field 'timer'
+1377959515794	Rename method 'signInForGame'

@@ -69,18 +69,18 @@ public class GameManager {
 
 	private void signInCurrUserForGame() {
 		ParseQuery<ParseObject> query = ParseQuery.getQuery("GameUser");
-		ParseObject gameUserMapping = new ParseObject("GameUser");
+		final ParseObject gameUserMapping = new ParseObject("GameUser");
 
-		ParseObject user = ParseObject.createWithoutData("_User", UserManager
+		final ParseObject user = ParseObject.createWithoutData("_User", UserManager
 				.getInstance().GetCurrentUser().getObjectId());
-		ParseObject gameParse = ParseObject.createWithoutData("Game",
+		final ParseObject gameParse = ParseObject.createWithoutData("Game",
 				game.getObjectId());
 
-		query.whereEqualTo("game", gameParse).whereEqualTo("user", user);
+		query.whereEqualTo("Game", gameParse).whereEqualTo("_User", user);
 		int count = 0;
 		try {
 			count = query.count();
-			Log.d("SavingMapping", ""+count);
+			Log.d("SavingMapping", count);
 		} catch (ParseException e1) {
 			Log.d("SavingMapping","Failed obtain number of games");
 			e1.printStackTrace();

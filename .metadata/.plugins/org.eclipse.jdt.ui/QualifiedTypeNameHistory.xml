@@ -16,7 +16,6 @@
 <fullyQualifiedTypeName name="com.parse.ParseQuery"/>
 <fullyQualifiedTypeName name="com.parse.GetCallback"/>
 <fullyQualifiedTypeName name="com.example.wikigame.GameStatus"/>
-<fullyQualifiedTypeName name="com.parse.ParseObject"/>
 <fullyQualifiedTypeName name="com.example.wikigame.UserManager"/>
 <fullyQualifiedTypeName name="com.example.wikigame.PlayerStatus"/>
 <fullyQualifiedTypeName name="com.parse.SaveCallback"/>
@@ -27,5 +26,7 @@
 <fullyQualifiedTypeName name="java.util.TimerTask"/>
 <fullyQualifiedTypeName name="java.lang.System"/>
 <fullyQualifiedTypeName name="java.lang.Runnable"/>
+<fullyQualifiedTypeName name="com.parse.ParseObject"/>
 <fullyQualifiedTypeName name="com.example.wikigame.GameManager"/>
+<fullyQualifiedTypeName name="com.parse.CountCallback"/>
 </qualifiedTypeNameHistroy>
