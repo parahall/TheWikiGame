@@ -25,7 +25,9 @@ public final class R {
         public static final int button_play=0x7f020001;
         public static final int button_score=0x7f020002;
         public static final int ic_launcher=0x7f020003;
-        public static final int thewikigame=0x7f020004;
+        public static final int player_active=0x7f020004;
+        public static final int player_lost=0x7f020005;
+        public static final int thewikigame=0x7f020006;
     }
     public static final class id {
         public static final int action_settings=0x7f080011;
@@ -36,7 +38,6 @@ public final class R {
         public static final int btn_target4=0x7f08000a;
         public static final int button1=0x7f080000;
         public static final int button2=0x7f080001;
-        public static final int imageView1=0x7f080003;
         public static final int layout_main=0x7f080002;
         public static final int rlvWons=0x7f08000c;
         public static final int timerValue=0x7f08000b;
@@ -46,11 +47,13 @@ public final class R {
         public static final int txt_Wins=0x7f08000d;
         public static final int txt_numbLost=0x7f080010;
         public static final int txt_numbWins=0x7f08000e;
+        public static final int usersPanel=0x7f080003;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
         public static final int game_play=0x7f030001;
         public static final int score=0x7f030002;
+        public static final int users_panel=0x7f030003;
     }
     public static final class menu {
         public static final int main=0x7f070000;

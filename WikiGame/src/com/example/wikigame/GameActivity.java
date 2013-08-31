@@ -76,11 +76,10 @@ public class GameActivity extends Activity implements IFinishNotify<Game> {
         updateUsersPanel();
     }
 
-    private Random rnd = new Random();
     private void updateUsersPanel(){
-        int activeUsers = rnd.nextInt(5);
-        int inactiveUsers = activeUsers + 1;
-        usersPanel.updatePanel(activeUsers, inactiveUsers);
+        GameManager.getInstance().getCurrentUsers(PlayerStatus.Playing.getCode());
+        GameManager.getInstance().getCurrentUsers(PlayerStatus.Lost.getCode());
+        usersPanel.updatePanel(GameManager.getInstance().getActiveUsers(), GameManager.getInstance().getInactiveUsers());
     }
 
 	private void initializeTheGame() {

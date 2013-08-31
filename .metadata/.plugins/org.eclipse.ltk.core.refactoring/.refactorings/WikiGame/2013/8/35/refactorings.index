@@ -8,3 +8,5 @@
 1377953108952	Encapsulate field 'activeTime'
 1377957977568	Rename field 'timer'
 1377959515794	Rename method 'signInForGame'
+1377971264710	Encapsulate field 'activeUsers'
+1377971268819	Encapsulate field 'inactiveUsers'
