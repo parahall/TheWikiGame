@@ -18,10 +18,15 @@ exports.getActiveGame = function(success, error) {
   				game.set("status",active);
   				game.save();	
   			}
+
+        var gameInJSon = results[0].toJSON();
+        gameInJSon.source = results[0].get("source");
+        gameInJSon.winner_article = results[0].get("winner_article");
+
   			var destinations = game.relation('destinations');
   			destinations.query().find({success: function(result){
-  				results[1]=result;
-  				success(results);
+  			gameInJSon.destinations=result;
+  				success(gameInJSon);
   			}});
   			
   		},

@@ -4,11 +4,7 @@
 Parse.Cloud.define("getGame", function(request, response) {
 	var gameManager = require('cloud/game_manager.js');
 	gameManager.getActiveGame(function(results) {
-	    
-	    console.log(results[0]);
-	    console.log(results[1]);
-
-	    response.success();
+	    response.success(results);
 	  },
 	   function(error) {
 	    console.error('Request failed with response code ' + error);

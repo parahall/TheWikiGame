@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_main"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@drawable/background" >
@@ -14,7 +15,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:src="@drawable/thewikigame" />
-
     </ScrollView>
 
     <LinearLayout
@@ -24,25 +24,45 @@
 
         <RelativeLayout
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent" >
+            android:layout_height="fill_parent"
+            android:paddingTop="40dp" >
+
+            <TextView
+                android:id="@+id/txt_Source"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:gravity="center"
+                android:text="This is the source article from Wikipedia"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <Button
                 android:id="@+id/btn_source"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerInParent="true"
+                android:layout_below="@id/txt_Source"
                 android:gravity="center"
+                android:clickable="false"
                 android:text="Button" />
+
+            <TextView
+                android:id="@+id/txt_Target"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/btn_source"
+                android:layout_marginTop="60dp"
+                android:gravity="center"
+                android:text="Choose the target article with shortest path from source"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <Button
                 android:id="@+id/btn_target1"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/btn_source"
+                android:layout_below="@id/txt_Target"
                 android:layout_centerInParent="true"
-                android:layout_marginTop="60dp"
                 android:gravity="center"
+                android:onClick="answerClicked"
                 android:text="Button" />
 
             <Button
@@ -53,6 +73,7 @@
                 android:layout_centerInParent="true"
                 android:layout_marginTop="10dp"
                 android:gravity="center"
+                android:onClick="answerClicked"
                 android:text="Button" />
 
             <Button
@@ -63,6 +84,7 @@
                 android:layout_centerInParent="true"
                 android:layout_marginTop="10dp"
                 android:gravity="center"
+                android:onClick="answerClicked"
                 android:text="Button" />
 
             <Button
@@ -73,6 +95,7 @@
                 android:layout_centerInParent="true"
                 android:layout_marginTop="10dp"
                 android:gravity="center"
+                android:onClick="answerClicked"
                 android:text="Button" />
         </RelativeLayout>
     </LinearLayout>

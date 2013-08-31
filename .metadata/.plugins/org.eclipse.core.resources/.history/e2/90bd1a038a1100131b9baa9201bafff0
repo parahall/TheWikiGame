@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background" >
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/rlvWons" >
+
+        <TextView
+            android:id="@+id/txt_Wins"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:text="Number of games you won" />
+
+        <TextView
+            android:id="@+id/txt_numbWins"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@id/txt_Wins"
+            android:text="10" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rlvWons" >
+
+        <TextView
+            android:id="@+id/txt_Lost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@+id/txt_Wins"
+            android:layout_below="@+id/txt_Wins"
+            android:text="Number of games you lost" />
+
+        <TextView
+            android:id="@+id/txt_numbLost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txt_numbWins"
+            android:layout_toRightOf="@id/txt_Lost"
+            android:text="30" />
+    </RelativeLayout>
+
+</RelativeLayout>

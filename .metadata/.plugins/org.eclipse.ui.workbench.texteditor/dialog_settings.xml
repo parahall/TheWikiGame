@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
+		<item value="game" key="selection"/>
+		<list key="findhistory">
+			<item value="Game"/>
+			<item value="game"/>
+		</list>
+	</section>
+</section>

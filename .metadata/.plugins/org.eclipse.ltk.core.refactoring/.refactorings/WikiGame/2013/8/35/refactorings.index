@@ -1,0 +1,6 @@
+1377863615161	Extract local variable 'object2'
+1377867014082	Rename method 'parseArticlesFromObject'
+1377937539035	Encapsulate field 'objectId'
+1377939987844	Move compilation unit
+1377940090639	Extract method 'getGameFromServer'
+1377940318576	Extract local variable 'game'

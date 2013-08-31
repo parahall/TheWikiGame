@@ -8,6 +8,7 @@ import android.util.Log;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 public class UserManager {
 	private final static int numberOfLoginAttempt = 5;
@@ -72,6 +73,8 @@ public class UserManager {
 	public ParseUser signupOrLogin() throws ParseException {
 		Log.d("User login", "signupOrLogin start");
 		ParseUser parseUser = new ParseUser();
+		parseUser.put("gamesNumber", 0);
+		parseUser.put("wins", 0);
 		final TelephonyManager tm = (TelephonyManager) ApplicationManager
 				.getAppContext().getSystemService(Context.TELEPHONY_SERVICE);
 
@@ -83,7 +86,7 @@ public class UserManager {
 		parseUser.setPassword(password);
 		try {
 			Log.d("User login", "try to login");
-			parseUser = ParseUser.logIn("Guest"+deviceId, password);
+			parseUser = ParseUser.logIn("Guest" + deviceId, password);
 			Log.d("User login", "User Succesfully loged in first time");
 		} catch (ParseException e) {
 			Log.d("User login", "error while tring to login: " + e.getMessage());
@@ -107,6 +110,30 @@ public class UserManager {
 							Log.d("User Login", "User succesfule logged in");
 						} else {
 							Log.d("User login", e.getMessage());
+						}
+					}
+				});
+	}
+
+	public void updateScore(String string) {
+		int gamesNumber = UserManager.getInstance().GetCurrentUser()
+				.getInt("gamesNumber");
+		gamesNumber++;
+		int winsNumber = UserManager.getInstance().GetCurrentUser()
+				.getInt("wins");
+		UserManager.getInstance().GetCurrentUser()
+				.put("gamesNumber", gamesNumber);
+		if (string == "win") {
+			winsNumber++;
+			UserManager.getInstance().GetCurrentUser().put("wins", winsNumber);
+		}
+		
+		UserManager.getInstance().GetCurrentUser()
+				.saveInBackground(new SaveCallback() {
+
+					public void done(ParseException e) {
+						if (e != null) {
+							Log.d("savingUser", e.getMessage());
 						}
 					}
 				});

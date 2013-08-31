@@ -10,13 +10,16 @@ public class Game {
 	private Date timestamp;
 	private ArrayList<Integer> shortPathlengths;
 	private Article winArticle;
+	private String objectId;
 
 	public Game(Article source, ArrayList<Article> destination,
-			ArrayList<Integer> shortPathlengths, Article winArticle) {
+			ArrayList<Integer> shortPathlengths, Article winArticle, String objectId) {
 		this.source = source;
+		destination.remove(0);
 		this.destination = destination;
 		this.shortPathlengths = shortPathlengths;
 		this.winArticle = winArticle;
+		this.objectId = objectId;
 	}
 
 	public Article getWinArticle() {
@@ -38,5 +41,10 @@ public class Game {
 	public ArrayList<Article> getDestination() {
 		return destination;
 	}
+
+	public String getObjectId() {
+		return objectId;
+	}
+
 
 }
