@@ -63,8 +63,8 @@ Obtain game from parse by requesting from cloud function new game, proceeding re
 There is a lot of issues that wasn`t fully tested and finished:
 1) Multiplayer - currently its display on right side yellow icons for each currently played user. However, first lose/win 
 will restart the game. As future improvemet, if player lose, he should wait till one of the other users will win the game 
-or 120 seconds will passed or there is no other players, playing this game.
-2) Tested only on Nexus 4
+or 120 seconds will passed or there is no other players, playing this game.\n
+2) Tested only on Nexus 4\n
 3) Problem with Parse that has bad performance with batch of requests. 
 Instead of pull concept, push notification should be implemented.
 
