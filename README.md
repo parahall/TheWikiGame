@@ -32,6 +32,8 @@ possible depth is [2,3,3,3])
   * Continue till all articles for given depth founded.
 4. Store founded source, 4 articles, depth and winning article to parse.
 
+Run this algo till 500 games stored in DB and if less, run again.
+
 Design issue: In this project, discovered that performance of this algorithm very bad, therefore in order to improve it 
 i consider the following algorithm changes
 
