@@ -1,7 +1,6 @@
 TheWikiGame
 ===========
 
-TheWikiGame
 
 Game that present mobile version of the origianl version of The Wiki Game with slight differences.
 
@@ -22,14 +21,22 @@ of game itself and update server with result of the game for current user.
 WikiGame-Crawler
 -------------------------------
 WikiGame-Crawler use following algorithm to obtain article and store it in DB:
+
 1) Calling for WikiApi with request for random article and store it as source.
+
 2) Define 4 possible random depth. (Currently because of performance issue and willing not to pay for additional workers on heroku 
 possible depth is [2,3,3,3])
+
 3) Running BFS on source with following changes:
+
   a) If current node depth is one of the requested depth, store this article and remove this depth from request.
+
   b) Obtain all adj nodes by calling WikiAPI with request for links of given article.
+
   c) For each obtain adj node(article) call BFS on it.
+
   d) Continue till all articles for given depth founded.
+
 4) Store founded source, 4 articles, depth and winning article to parse.
 
 Design issue: In this project, discovered that performance of this algorithm very bad, therefore in order to improve it 
