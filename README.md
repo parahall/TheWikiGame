@@ -22,22 +22,20 @@ WikiGame-Crawler
 -------------------------------
 WikiGame-Crawler use following algorithm to obtain article and store it in DB:
 
-1) Calling for WikiApi with request for random article and store it as source.
-
-2) Define 4 possible random depth. (Currently because of performance issue and willing not to pay for additional workers on heroku 
+1. Calling for WikiApi with request for random article and store it as source.
+2. Define 4 possible random depth. (Currently because of performance issue and willing not to pay for additional workers on heroku 
 possible depth is [2,3,3,3])
+3. Running BFS on source with following changes:
 
-3) Running BFS on source with following changes:
+  * If current node depth is one of the requested depth, store this article and remove this depth from request.
 
-  a) If current node depth is one of the requested depth, store this article and remove this depth from request.
+  * Obtain all adj nodes by calling WikiAPI with request for links of given article.
 
-  b) Obtain all adj nodes by calling WikiAPI with request for links of given article.
+  * For each obtain adj node(article) call BFS on it.
 
-  c) For each obtain adj node(article) call BFS on it.
+  * Continue till all articles for given depth founded.
 
-  d) Continue till all articles for given depth founded.
-
-4) Store founded source, 4 articles, depth and winning article to parse.
+4. Store founded source, 4 articles, depth and winning article to parse.
 
 Design issue: In this project, discovered that performance of this algorithm very bad, therefore in order to improve it 
 i consider the following algorithm changes
