@@ -34,7 +34,9 @@ possible depth is [2,3,3,3])
 
 Design issue: In this project, discovered that performance of this algorithm very bad, therefore in order to improve it 
 i consider the following algorithm changes
+
 1) Run BFS on source and store in memory the founded mapping.
+
 2) Using this mapping we can create a lot of games by just running BFS one time.
 However,to store in memory mapping will take much more memory then allocated in heroku for free.
 
@@ -51,8 +53,10 @@ will obtain next available game.
 
 Design Issue: There is a huge problem in parse that not allow to put schedule workers/procedures. And on heroku only 1 worker
 allowed for free. 
-As future improvement sconsideration, 
+Future improvements that should be considered:
+
 1) Migration to heroku and creating additional schedule worker should be created that will take care of closing games after 120 seconds.
+
 2) Obtaining random game in order to not show game with same source(but different targets).
 
 WikiGame (client)
@@ -65,7 +69,9 @@ There is a lot of issues that wasn`t fully tested and finished:
 1) Multiplayer - currently its display on right side yellow icons for each currently played user. However, first lose/win 
 will restart the game. As future improvemet, if player lose, he should wait till one of the other users will win the game 
 or 120 seconds will passed or there is no other players, playing this game.
+
 2) Tested only on Nexus 4
+
 3) Problem with Parse that has bad performance with batch of requests. 
 Instead of pull concept, push notification should be implemented.
 
