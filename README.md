@@ -18,8 +18,10 @@ next available game at server
 WikiGame - Android App. Send request to WikiGame-Server(parse), recieve new game and display it to user. Implement the logic
 of game itself and update server with result of the game for current user.
 
+
+WikiGame-Crawler
 -------------------------------
-WikiGame-Crawler using following algorithm to obtain article and store it in DB:
+WikiGame-Crawler use following algorithm to obtain article and store it in DB:
 1) Calling for WikiApi with request for random article and store it as source.
 2) Define 4 possible random depth. (Currently because of performance issue and willing not to pay for additional workers on heroku 
 possible depth is [2,3,3,3])
@@ -38,8 +40,9 @@ However,to store in memory mapping will take much more memory then allocated in 
 
 Small improvement that was done is for one running of BFS is to create 10 games with same source by holding 10 queues of depths.
 
------------------------------------
+
 WikiGame-Server 
+-----------------------------------
 Have only one function "GetGame" that obtaining available game from Parse DataBase Game table.
 Games stored by Crawler with status "ready" (1) if it just created, "active"(2) if its played now and "played"(0) if its already played
 Server obtain first game ordered by status. If there is no active game in system, it takes "ready" game and turn it to "active".
@@ -51,8 +54,9 @@ allowed for free.
 As future improvement sconsideration, 
 1) Migration to heroku and creating additional schedule worker should be created that will take care of closing games after 120 seconds.
 2) Obtaining random game in order to not show game with same source(but different targets).
-------------------------------------
+
 WikiGame (client)
+------------------------------------
 Obtain game from parse by requesting from cloud function new game, proceeding response , create the game and display it to user.
 120 seconds given to play this game. If the answer was choose new game will obtain.
 
